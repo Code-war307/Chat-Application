@@ -9,7 +9,7 @@ import { app, server } from "./lib/socket.js"
 
 
 dotenv.config();
-//const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5001;
 app.use(express.json({limit: "100mb"}))
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -20,6 +20,6 @@ app.use("/api/message", messageRoutes)
 app.use("/api/request", requestRoutes)
 
 server.listen(port, () => {
-    //console.log(`server is running in port :  ${port}`)
+    console.log(`server is running in port :  ${port}`)
     connectDB();
 })
