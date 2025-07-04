@@ -39,7 +39,7 @@ export default function LandingPage() {
           <div className="flex space-x-4">
             <button
               onClick={handleScrollToFeatures}
-              className="text-white hover:text-secondColor transition-colors duration-300"
+              className="hidden text-white hover:text-secondColor transition-colors duration-300 lg:block"
             >
               Features
             </button>
