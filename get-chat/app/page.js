@@ -232,9 +232,9 @@ export default function LandingPage() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         viewport={{ once: true }}
-        className="sticky bottom-0 bg-[#0a0a0a] py-6 px-4 text-center border-t border-white/10 text-gray-500 text-sm"
+        className="sticky bottom-0 bg-[#0a0a0a] py-6 px-4 text-center border-t border-white/10 text-white text-sm"
       >
-        © U Chat 2025 — All rights reserved.
+        © Get Chat 2025 — All rights reserved.
       </motion.footer>
     </main>
   );
