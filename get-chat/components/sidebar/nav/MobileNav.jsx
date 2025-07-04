@@ -26,13 +26,14 @@ const MobileNav = () => {
     >
       <nav className="w-full">
         <ul className="flex justify-evenly items-center">
-          {paths.slice(0,4).map((path, id) => {
+          {paths.slice(0,3).map((path, id) => {
             return (
-              <li key={id} className="relative hidden">
-                <Link href={path.href}>
+              <li key={id} className="relative">
+                <Link href={path.href} aria-label={path.name}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
+                        aria-label={path.name}
                         size="icon"
                         className={`bg-transparent
                         hover:bg-buttonFirstColor ${path.active ? "bg-buttonFirstColor" : ""}`}

@@ -16,7 +16,6 @@ export const useAuthStore = create(
       isLoggingIn: false,
       onlineFriends: [],
       socket: null,
-      isHydrated: false,
 
       setUser: (userData) => {
         const data = {
@@ -98,7 +97,7 @@ export const useAuthStore = create(
 
       connectSocket: () => {
         const { authUser } = get();
-        if (!authUser || get().socket?.connected) {
+        if (!authUser) {
           console.error("User is not authenticated, cannot connect socket.");
           return;
         }
@@ -125,9 +124,6 @@ export const useAuthStore = create(
     {
       name: "auth-user",
       partialize: (state) => ({authUser: state.authUser}),
-      onRehydrateStorage: () => (state) => {
-        state.isHydrated = true;
-      },
     }
   )
 );

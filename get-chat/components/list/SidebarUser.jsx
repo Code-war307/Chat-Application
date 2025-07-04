@@ -28,7 +28,7 @@ const SidebarUser = ({ userInfo }) => {
           <div className="flex flex-col truncate">
             <h4 className="truncate font-bold text-lg text-white">{userInfo?.username}</h4>
             <p className="text-sm text-muted-foreground truncate">
-              {userInfo?.bio || "No bio available"}
+              {userInfo?.bio}
             </p>
           </div>
         </div>

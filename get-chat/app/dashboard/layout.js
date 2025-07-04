@@ -6,14 +6,17 @@ import { useEffect } from "react";
 
 export default function DashboardLayout({ children }) {
   const {data: session, status} = useSession();
-  const {setUser, connectSocket, isHydrated} = useAuthStore()
+  const {setUser, connectSocket} = useAuthStore()
+  
   useEffect(() => {
-    if (!isHydrated) return;
     if (status === "authenticated" && session?.user) {
-      setUser(session.user);
+      const storeUserDate = async () => {
+        await setUser(session.user);
+      };
+      storeUserDate();
       connectSocket();
     }
-  }, [status, session, setUser, connectSocket, isHydrated]);
+  }, [status, session, setUser, connectSocket]);
 
   return (
         <SidebarWrapper>{children}</SidebarWrapper>

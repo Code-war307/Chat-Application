@@ -1,10 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
 import { useNavigation } from "@/hooks/useNavigation";
 import Link from "next/link";
 
@@ -18,13 +15,14 @@ const DesktopNav = () => {
     >
       <nav>
         <ul className="flex flex-col items-center gap-4">
-          {paths.slice(0,3).map((path, id) => {
+          {paths.slice(0, 3).map((path, id) => {
             return (
               <li key={id} className="relative">
-                <Link href={path.href}>
+                <Link href={path.href} aria-label={path.name}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
+                        aria-label={path.name}
                         size="icon"
                         className={`bg-transparent
                         hover:bg-buttonFirstColor ${path.active ? "bg-buttonFirstColor" : ""}`}
@@ -48,10 +46,10 @@ const DesktopNav = () => {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
+                        name={path.name}
                         size="icon"
                         className={`bg-transparent
                         hover:bg-buttonFirstColor ${path.active ? "bg-buttonFirstColor" : ""}`}
-                        
                       >
                         {path.icon}
                       </Button>
