@@ -34,7 +34,7 @@ export default function LandingPage() {
               width={30}
               height={30}
             />
-            <h1 className="text-2xl font-bold">U Chat</h1>
+            <h1 className="text-2xl font-bold">Get Chat</h1>
           </div>
           <div className="flex space-x-4">
             <button
@@ -113,7 +113,7 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="text-4xl font-bold"
         >
-          Why Choose <span className="text-secondColor hover:text-firstColor">U Chat</span>?
+          Why Choose <span className="text-secondColor hover:text-firstColor">Get Chat</span>?
         </motion.h2>
         <motion.p
           variants={fadeUp}
