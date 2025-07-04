@@ -17,8 +17,6 @@ const InboxPage = () => {
     }
   }, [getFriendRequests, jwtToken]);
 
-  console.log(requests)
-
   return (
     <>
       <ItemList title="Inbox">

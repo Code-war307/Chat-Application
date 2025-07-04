@@ -67,7 +67,6 @@ const MediaPreview = () => {
     e.preventDefault();
     setMediaFiles([]);
   };
-  console.log(mediaFiles)
 
   return (
     <AnimatePresence>

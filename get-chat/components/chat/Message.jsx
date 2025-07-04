@@ -3,13 +3,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { isAudioFile } from "@/helper/geticon";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import Audio from "./Audio";
 import Document from "./Document";
 import ImgAndVideo from "./ImgAndVideo";
 import TextMessage from "./TextMessage";
-
-
 
 const Message = ({
   content,
@@ -19,11 +17,6 @@ const Message = ({
   senderName,
   media = [],
 }) => {
-
-  
-
-  
-
   const messageEndRef = useRef(null);
 
   const imagesAndVideos = media.filter(
@@ -43,8 +36,6 @@ const Message = ({
 
   const hasText = content && content.trim().length > 0;
   const isMultipleMedia = imagesAndVideos.length > 1;
-
-  
 
   useEffect(() => {
     if (messageEndRef.current && (content || media.length > 0)) {
@@ -84,31 +75,43 @@ const Message = ({
             fromCurrentUser ? "rounded-br-none" : "rounded-bl-none"
           )}
         >
-
           {/* work when there is img and video available */}
           {imagesAndVideos.length > 0 && (
-            <ImgAndVideo imagesAndVideos={imagesAndVideos} isMultipleMedia={isMultipleMedia} hasText={hasText} timestamp={timestamp} media={media} fromCurrentUser={fromCurrentUser}/>
+            <ImgAndVideo
+              imagesAndVideos={imagesAndVideos}
+              isMultipleMedia={isMultipleMedia}
+              hasText={hasText}
+              timestamp={timestamp}
+              media={media}
+              fromCurrentUser={fromCurrentUser}
+            />
           )}
 
           {/* work when there is document available */}
           {documents.length > 0 &&
             documents.map((file, i) => {
-              
-              return (
-                <Document key={i} file={file} timestamp={timestamp}/>
-              );
+              return <Document key={i} file={file} timestamp={timestamp} />;
             })}
-          
+
           {/* work when there is audio file available */}
           {audioFile.length > 0 &&
             audioFile.map((file, i) => {
               return (
-                <Audio key={i} file={file} timestamp={timestamp} fromCurrentUser={fromCurrentUser}/>
+                <Audio
+                  key={i}
+                  file={file}
+                  timestamp={timestamp}
+                  fromCurrentUser={fromCurrentUser}
+                />
               );
             })}
 
           {hasText && (
-            <TextMessage fromCurrentUser={fromCurrentUser} content={content} timestamp={timestamp}/>
+            <TextMessage
+              fromCurrentUser={fromCurrentUser}
+              content={content}
+              timestamp={timestamp}
+            />
           )}
         </div>
       </div>
@@ -117,4 +120,3 @@ const Message = ({
 };
 
 export default Message;
-

@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
 
-const BASE_URL = "http://localhost:5001";
+const BASE_URL = process.env.BACKEND_URL;
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -26,6 +26,7 @@ export const useAuthStore = create(
         };
         set({ authUser: data });
       },
+
       clearUser: () => set({ authUser: null }),
 
       checkUniqueUsername: async (debouncedUsername) => {
@@ -57,10 +58,20 @@ export const useAuthStore = create(
         try {
           set({ isSigningUp: true });
           const response = await axiosInstance.post("/auth/signup", formData);
-          const { message } = response.data;
-          toast.success(message);
-          router.replace("/sign-in");
-          get().connectSocket();
+          
+          const result = await signIn("credentials", {
+            redirect: false,
+            email: formData.email,
+            password: formData.password,
+          });
+          if (result?.ok) {
+            const { message } = response.data;
+            router.replace("/dashboard/conversation");
+            toast.success(message);
+            get().connectSocket();
+          } else {
+            toast.error(result?.error);
+          }
         } catch (error) {
           console.error("Error in signup controller:", error);
           const message =
