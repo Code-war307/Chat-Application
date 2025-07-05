@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5001";
 export const useAuthStore = create(
   persist(
     (set, get) => ({
