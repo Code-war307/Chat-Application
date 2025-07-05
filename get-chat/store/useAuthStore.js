@@ -22,7 +22,7 @@ export const useAuthStore = create(
           bio: userData.bio,
           username: userData.username,
           profilePic: userData.profilePic,
-          email: userData.email,
+          _id: userData._id,
         };
         set({ authUser: data });
       },
