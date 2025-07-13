@@ -1,6 +1,7 @@
 import cloudinary from "../lib/cloudinary.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import fs from "fs";
 
 export const signup = async (req, res) => {
   const { username, email, password } = req.body;
@@ -25,7 +26,12 @@ export const signup = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ username, email, password: hashedPassword, isVerified: true });
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      isVerified: true,
+    });
 
     await newUser.save();
     return res
@@ -69,51 +75,110 @@ export const login = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { username, password, profilePic, bio } = req.body;
+    const { username, password, bio } = req.body;
     const userId = req.user._id;
 
-    const user = await User.findById({ userId });
+    if (!username && !password && !bio && !req.file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Nothing is send to update" });
+    }
+
+    const user = await User.findById(userId);
     if (!user) {
       return res
         .status(400)
         .json({ success: false, message: "User not found" });
     }
 
-    if (user.username === username) {
-      return res.status(400).json({
-        success: false,
-        message: "This name is already exist. Try new !!",
-      });
+    const updates = {};
+
+    if (username && username != user.username) {
+      if (username.length < 3 || username.length > 25) {
+        return res.status(401).json({
+          success: false,
+          message: "Username length must be in limit",
+        });
+      }
+      if (username.startsWith("_")) {
+        return res.status(400).json({
+          success: false,
+          message: "Username not start with underscore",
+        });
+      }
+      updates.username = username;
     }
 
-    const isOldPassword = await bcrypt.compare(user.password, password);
-    if (isOldPassword) {
+    if (password) {
+      if (password.length < 6 || password.length > 35) {
+        return res.status(401).json({
+          success: false,
+          message: "Password length must be 6 - 35 characters.",
+        });
+      }
+      const samePass = await bcrypt.compare(user.password, password);
+      if (!samePass) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        updates.password = hashedPassword;
+      }
+    }
+
+    if (bio != undefined && bio != user.bio) {
+      if (bio.length > 100) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Bio must be in 100 characters" });
+      }
+      updates.bio = bio;
+    }
+
+    if (req.file) {
+      try {
+        const uploadResponse = await cloudinary.uploader.upload(req.file.path, {
+          folder: "chat_uploads",
+        });
+
+        updates.profilePic = uploadResponse.secure_url;
+        fs.unlinkSync(req.file.path);
+      } catch (error) {
+        fs.unlinkSync(req.file.path);
+        console.error("Cloudinary Upload Error:", error);
+        return res
+          .status(500)
+          .json({ success: false, message: "Image upload failed" });
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
       return res
         .status(400)
-        .json({ success: false, message: "Don't use old Password" });
+        .json({ success: false, message: "No new changes detected." });
     }
 
-    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+    const updateUserProfile = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      select: "_id username profilePic bio email isVerified",
+    });
 
-    const updateUserProfile = await User.findByIdAndUpdate(
-      userId,
-      {
-        username,
-        password,
-        profilePic: uploadResponse.secure_url,
-        bio,
-      },
-      { new: true }
-    );
-
-    res.status(200).json(updateUserProfile);
-  } catch (error) {}
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      updateUserProfile,
+    });
+  } catch (error) {
+    console.error("Error in update user profile controller");
+    res.status(500).json({
+      success: false,
+      message: "Error in update user profile controller",
+    });
+  }
 };
 
 export const checkUniqueName = async (req, res) => {
   try {
     const username = req.query.username;
-    if(!username || username.length < 3){
+    if (!username || username.length < 3) {
       return res.status(404).json({
         success: false,
         message: "Username must be at least 3 characters",

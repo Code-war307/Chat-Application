@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 const publicRoutes = ["/", "/sign-in", "/sign-up"];
-const protectedRoutes = ["/dashboard", "/profile", "/media-preview"];
+const protectedRoutes = ["/dashboard", "/media-preview"];
 
 export async function middleware(request) {
   const token = await getToken({
@@ -35,6 +35,7 @@ export const config = {
     "/sign-in",
     "/sign-up",
     "/dashboard/:path*",
-    "/profile/:path*",
+    "/media-preview",
+    "/error/:path*"
   ],
 };

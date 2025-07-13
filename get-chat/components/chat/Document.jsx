@@ -1,8 +1,9 @@
 import { getFilePreviewInfo } from "@/helper/geticon";
 import { Button } from "../ui/button";
+import { Loader } from "lucide-react";
 
-const Document = ({file, timestamp, fromCurrentUser}) => {
-    const previewUrl = getFilePreviewInfo(file.url);
+const Document = ({file, timestamp, fromCurrentUser, isSending}) => {
+    const previewUrl = getFilePreviewInfo(file.url || file.name);
   return (
     <div
       className="bg-white/4 backdrop-blur-md border border-white/20 text-black rounded-lg  shadow-sm shadow-gray-700 px-3 py-3 mb-3 w-full"
@@ -30,9 +31,9 @@ const Document = ({file, timestamp, fromCurrentUser}) => {
         </Button>
       </div>
       <p
-        className={`text-[0.6rem] text-white flex mt-2 font-semibold ${fromCurrentUser ? "justify-end" : "justify-start"}`}
+        className={`text-[0.6rem] text-white flex items-center mt-2 font-semibold${fromCurrentUser ? "justify-end" : "justify-start"}`}
       >
-        {timestamp}
+        <span>{timestamp}</span>{!isSending && <span><Loader className={`absolute w-3 animate-spin ${fromCurrentUser ? "left-2 bottom-2" : "right-2 bottom-2"}`}/></span>}
       </p>
     </div>
   );

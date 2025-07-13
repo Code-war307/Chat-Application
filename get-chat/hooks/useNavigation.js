@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
 export const useNavigation = () => {
+  const {authUser} = useAuthStore()
   const pathname = usePathname();
-  const { authUser } = useAuthStore();
 
   const paths = useMemo(
     () => [
@@ -29,23 +29,23 @@ export const useNavigation = () => {
         active: pathname === "/dashboard/inbox",
       },
       {
-        name: "Setting",
+        name: "setting",
         href: "/dashboard/setting",
         icon: <Settings />,
         active: pathname === "/dashboard/setting",
       },
       {
         name: "profile",
-        href: "/dashboard/setting/profile-page",
+        href: "/dashboard/setting/profile",
         icon: (
           <>
-            <Avatar className={"w-7 h-7 border-none"}>
-              <AvatarImage src={authUser?.profilePic} />
-              <AvatarFallback>{authUser?.username.substr(0, 1)}</AvatarFallback>
+            <Avatar className={'bg-transparent border-none w-6'}>
+              <AvatarImage src={authUser?.profilePic || '/user.png'} className={'object-contain'}/>
+              <AvatarFallback>{authUser?.username.substr(0,1)}</AvatarFallback>
             </Avatar>
           </>
         ),
-        active: pathname === "/dashboard/setting/profile-page",
+        active: pathname === "/dashboard/setting/profile",
       },
     ],
     [pathname, authUser]

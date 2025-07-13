@@ -6,7 +6,9 @@ import CreateGroup from "./_components/CreateGroup";
 const GroupPage = () => {
   return (
     <>
-      <ItemList title="Group" action={<CreateGroup/>}></ItemList>
+      <ItemList title="Group" action={<CreateGroup/>}>
+      <span className="text-white">This feature is under work</span>
+      </ItemList>
       <ConversationFallback/>
     </>
   );
@@ -14,7 +16,7 @@ const GroupPage = () => {
 
 export default GroupPage;
 
-// export const metadata = {
-//   title: "Group",
-//   description: "Group page",
-// };
+export const metadata = {
+  title: "Get Chat - Group conversation",
+  description: "Group chat page",
+};

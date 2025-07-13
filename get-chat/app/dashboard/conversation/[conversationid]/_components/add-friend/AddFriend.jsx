@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Loader2, UserPlus } from "lucide-react";
 import {
@@ -28,10 +24,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useRequestStore } from "@/store/useRequestStore";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/useAuthStore";
 const AddFriend = () => {
-  const { data: session } = useSession();
-  const jwtToken = session?.jwtToken;
+  const {jwtToken} = useAuthStore()
   const { IsRequestSubmiitting, sendFriendRequest } = useRequestStore();
 
   const form = useForm({
@@ -51,16 +46,11 @@ const AddFriend = () => {
   return (
     <Dialog>
       <Tooltip>
-        <TooltipTrigger asChild>
-          <Button size={"icon"} className={'bg-transparent hover:bg-sidebarUserHover'}>
-            <DialogTrigger>
-              <UserPlus className="text-white" />
+        <TooltipTrigger>
+          <DialogTrigger asChild>
+              <UserPlus className="text-white w-4" />
             </DialogTrigger>
-          </Button>
         </TooltipTrigger>
-        <TooltipContent>
-          <p>Add Friend</p>
-        </TooltipContent>
       </Tooltip>
 
       <DialogContent>

@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.get("/users", protectedRoute, getUserForSidebar);
 router.get("/:id", protectedRoute, getMessages);
-router.post("/send/:id", protectedRoute, upload.array("files", 10), multerErrorHandler, sendMessage)
+router.post("/send/:id", protectedRoute, upload.array("files", 5), multerErrorHandler, sendMessage)
 
 export default router;

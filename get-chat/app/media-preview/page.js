@@ -18,14 +18,17 @@ import {
   ZoomOut,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const MediaPreview = () => {
-  const { previewMedia } = useChatStore();
-  console.log(previewMedia);
+  const { previewMedia, selectedFriend } = useChatStore();
   const [currentZoom, setCurrentZoom] = useState(1);
+  const router = useRouter()
 
-  const handleBack = () => {};
+  const handleBack = () => {
+    router.replace(`/dashboard/conversation/${selectedFriend._id}`)
+  };
 
   const handleZoomIn = () => {
     setCurrentZoom((prev) => Math.min(prev + 0.2, 3));
@@ -109,7 +112,7 @@ const MediaPreview = () => {
                 <div className="p-1 ">
                   <Card className={"bg-transparent border-none shadow-none"}>
                     <CardContent className="relative flex aspect-square items-center justify-center overflow-hidden">
-                      {media.resourceTYpe === "image" ? (
+                      {media.resourceType === "image" ? (
                         <Image
                           src={media.url}
                           fill
@@ -143,7 +146,7 @@ const MediaPreview = () => {
               key={idx}
               className="child relative h-full w-20 rounded-md overflow-hidden border-2 border-transparent transition-all duration-300 cursor-pointer"
             >
-              {media.resourceTYpe === "image" ? (
+              {media.resourceType === "image" ? (
                 <Image
                   src={media.url}
                   fill

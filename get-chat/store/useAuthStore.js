@@ -1,11 +1,12 @@
 import { axiosInstance } from "@/lib/axios";
-import { signIn } from "next-auth/react";
+import { signIn, update} from "next-auth/react";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+//const BASE_URL = "http://localhost:5001";
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -14,20 +15,24 @@ export const useAuthStore = create(
       isCheckingUsername: false,
       isSigningUp: false,
       isLoggingIn: false,
+      isUpdateUser: false,
       onlineFriends: [],
       socket: null,
+      jwtToken: null,
 
       setUser: (userData) => {
         const data = {
-          bio: userData.bio,
+          _id: userData._id,
           username: userData.username,
           profilePic: userData.profilePic,
-          email: userData.email,
+          bio: userData.bio,
         };
         set({ authUser: data });
       },
 
       clearUser: () => set({ authUser: null }),
+
+      setToken: (jwtToken) => set({ jwtToken: jwtToken }),
 
       checkUniqueUsername: async (debouncedUsername) => {
         try {
@@ -58,7 +63,7 @@ export const useAuthStore = create(
         try {
           set({ isSigningUp: true });
           const response = await axiosInstance.post("/auth/signup", formData);
-          
+
           const result = await signIn("credentials", {
             redirect: false,
             email: formData.email,
@@ -106,6 +111,30 @@ export const useAuthStore = create(
         }
       },
 
+      updateUser: async (formData) => {
+        const { jwtToken } = get();
+        set({ isUpdateUser: true });
+        try {
+          const response = await axiosInstance.post(
+            "/auth/update-profile",
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          );
+          const newUserData = response.data.updateUserProfile;
+          toast.success(response.data.message)
+          return newUserData
+        } catch (error) {
+          console.error("Error in update controller:", error);
+          toast.error(error.response?.data?.error || "Something went wrong");
+        } finally {
+          set({ isUpdateUser: false });
+        }
+      },
+
       connectSocket: () => {
         const { authUser } = get();
         if (!authUser) {
@@ -133,8 +162,8 @@ export const useAuthStore = create(
       },
     }),
     {
-      name: "auth-user",
-      partialize: (state) => ({authUser: state.authUser}),
+      name: "auth-storage",
+      partialize: (state) => ({ authUser: state.authUser }),
     }
   )
 );

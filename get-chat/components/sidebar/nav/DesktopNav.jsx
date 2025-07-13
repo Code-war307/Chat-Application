@@ -41,12 +41,12 @@ const DesktopNav = () => {
         <ul className="flex flex-col items-center gap-4">
           {paths.slice(3).map((path, id) => {
             return (
-              <li key={id} className="relative hidden">
-                <Link href={path.href}>
+              <li key={id} className="relative">
+                <Link href={path.href} aria-label={path.name}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        name={path.name}
+                        aria-label={path.name}
                         size="icon"
                         className={`bg-transparent
                         hover:bg-buttonFirstColor ${path.active ? "bg-buttonFirstColor" : ""}`}

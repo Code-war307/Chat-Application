@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { Pause, Play } from "lucide-react";
+import { Loader, Pause, Play } from "lucide-react";
 import { useChatStore } from "@/store/useChatStore";
-const Audio = ({ file, timestamp, fromCurrentUser }) => {
+const Audio = ({ file, timestamp, fromCurrentUser, isSending }) => {
   const audioRef = useRef(null);
   const { isPlaying, duration, currentTime, setIsPlaying, setCurrentTime,  setDuration} =
     useChatStore();
@@ -55,11 +55,11 @@ const Audio = ({ file, timestamp, fromCurrentUser }) => {
     }, []);
   return (
     <div className="w-full p-3 bg-white/10 rounded-lg shadow-md flex flex-col">
-      <audio ref={audioRef} src={file.url} preload="metadata" hidden />
+      <audio ref={audioRef} src={file.url || file?.name} preload="metadata" hidden />
       <div className="flex items-center gap-3">
         <button
             onClick={togglePlay}
-            className={`border-1 p-2 rounded-full cursor-pointer ${isPlaying ? "bg-firstColor border-secondColor text-secondColor" : "bg-secondColor border-firstColor text-firstColor"}`}
+            className={`border-1 p-2 rounded-full cursor-pointer focus:outline-none ${isPlaying ? "bg-firstColor border-secondColor text-secondColor" : "bg-secondColor border-firstColor text-firstColor"}`}
           >
             {isPlaying ? (
               <Pause className="w-4 h-4" />
@@ -85,8 +85,8 @@ const Audio = ({ file, timestamp, fromCurrentUser }) => {
           {formatTime(duration)}
         </div>
       </div>
-      <p className={`text-[0.6rem] text-white flex mt-2 font-semibold ${fromCurrentUser ? "justify-start":"justify-end" }`}>
-        {timestamp}
+      <p className={`text-[0.6rem] text-white flex items-center mt-2 font-semibold ${fromCurrentUser ? "justify-start":"justify-end" }`}>
+        {!isSending ? <span><Loader className={`relative w-4 animate-spin ${fromCurrentUser ? "left-0" : "right-0"}`}/></span> : timestamp}
       </p>
     </div>
   );

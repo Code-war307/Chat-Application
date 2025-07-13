@@ -7,17 +7,16 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { dummyMsg } from "@/helper/dummyMsg";
 import { getFilePreviewInfo } from "@/helper/geticon";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useChatStore } from "@/store/useChatStore";
 import { AnimatePresence, motion } from "framer-motion";
 import { FilePlus, Send, Smile, X } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
 const MediaPreview = () => {
-  const { data: session } = useSession();
-  const jwtToken = session?.jwtToken;
   const fileInputRef = useRef(null);
   const {
     mediaFiles,
@@ -28,6 +27,7 @@ const MediaPreview = () => {
   } = useChatStore();
   const conversationId = selectedFriend?._id;
   const [text, setText] = useState("");
+  const {authUser, jwtToken} = useAuthStore()
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files || []);
@@ -54,13 +54,17 @@ const MediaPreview = () => {
       formData.append("files", fileObj.file);
     });
 
+    const dummyMessage = dummyMsg(text, mediaFiles, authUser, conversationId);
+
+    setText("");
+    setMediaFiles([]);
+
     try {
-      await sendMessages(jwtToken, conversationId, formData);
+      await sendMessages(jwtToken, conversationId, formData, dummyMessage);
     } catch (error) {
       console.error("Error sending message:", error);
     }
-    setText("");
-    setMediaFiles([]);
+    
   };
 
   const removePreview = (e) => {

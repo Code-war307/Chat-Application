@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Get Chat",
   description: "Connect with world easily",
-  icons:{
-    icon: '/messenger.png'
-  }
+  icons: {
+    icon: "/messenger.png",
+  },
 };
 
 export default function RootLayout({ children }) {

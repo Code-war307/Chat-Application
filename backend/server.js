@@ -19,6 +19,10 @@ app.use("/api/auth", authRoutes)
 app.use("/api/message", messageRoutes)
 app.use("/api/request", requestRoutes)
 
+app.get("/", (req, res) => {
+  res.send("Backend server is running ✅");
+});
+
 server.listen(port, () => {
     console.log(`server is running in port :  ${port}`)
     connectDB();

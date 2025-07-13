@@ -3,11 +3,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Check, Loader2, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useRequestStore } from "@/store/useRequestStore";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/useAuthStore";
 
-const Request = ({ senderInfo, onRequestHandled }) => {
-  const { data: session } = useSession();
-  const jwtToken = session?.jwtToken;
+const Request = ({ senderInfo }) => {
+  const {jwtToken} = useAuthStore()
   const {
     isAcceptingRequest,
     isRejectingRequest,

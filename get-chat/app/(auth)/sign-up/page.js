@@ -60,7 +60,7 @@ const SignupPage = () => {
         className="h-10 absolute top-0 left-0 m-4 flex items-center gap-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
         onClick={() => router.replace("/")}
       >
-        <Image src="/messenger.png" width={40} height={50} alt="Logo" />
+        <Image src="/messenger.png" width={30} height={30} alt="Logo" />
         <span className="text-lg font-bold">Get Chat</span>
       </div>
 

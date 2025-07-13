@@ -4,14 +4,15 @@ import { useParams } from "next/navigation";
 export const useConversation = () => {
     const params = useParams();
 
-    const conversationId = useMemo(() => {
-        return params?.conversationid
-    },[params?.conversationid])
+    const queryId = useMemo(() => {
+        const query = params?.conversationid || params?.param
+        return query
+    },[params?.conversationid, params?.param])
 
-    const isActive = useMemo(() => !!conversationId, [conversationId])
+    const isActive = useMemo(() => !!queryId, [queryId])
 
     return {
         isActive,
-        conversationId
+        queryId
     }
 };

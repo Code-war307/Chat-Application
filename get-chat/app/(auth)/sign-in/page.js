@@ -43,7 +43,7 @@ const LoginPage = () => {
         className="h-10 absolute top-0 left-0 m-4 flex items-center gap-x-2 cursor-pointer hover:scale-105 transition-all duration-300 ease-in-out"
         onClick={() => router.replace("/")}
       >
-        <Image src="/messenger.png" alt="" width={25} height={25} />
+        <Image src="/messenger.png" alt="" width={30} height={30} />
         <span className="text-lg font-bold">Get Chat</span>
       </div>
       <div className="flex w-full max-w-5xl rounded-xl shadow-xl overflow-hidden">

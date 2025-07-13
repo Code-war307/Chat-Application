@@ -14,16 +14,16 @@ import { useForm } from "react-hook-form";
 import TextareaAutosize from "react-textarea-autosize";
 import { useRef } from "react";
 import { ImageDown, Send } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useChatStore } from "@/store/useChatStore";
+import { dummyMsg } from "@/helper/dummyMsg";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const ChatInput = ({ conversationId }) => {
-  const { data: session } = useSession();
-  const jwtToken = session?.jwtToken;
   const fileInputRef = useRef(null);
   const inputRef = useRef(null);
-
-  const { sendMessages, isMessageSending, addMediaFiles, mediaFiles } = useChatStore();
+  const { sendMessages, isMessageSending, addMediaFiles, mediaFiles } =
+    useChatStore();
+  const { authUser, jwtToken } = useAuthStore();
 
   const form = useForm({
     resolver: zodResolver(chatMessageSchema),
@@ -57,9 +57,11 @@ const ChatInput = ({ conversationId }) => {
     const formData = new FormData();
     formData.append("text", data.content.trim());
     formData.append("files", null);
-    
+
+    const dummyMessage = dummyMsg(hasText, mediaFiles, authUser, conversationId);
+
     try {
-      await sendMessages(jwtToken, conversationId, formData);
+      await sendMessages(jwtToken, conversationId, formData, dummyMessage);
       form.reset();
     } catch (error) {
       console.error("Error sending message:", error);

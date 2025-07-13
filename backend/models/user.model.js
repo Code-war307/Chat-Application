@@ -18,14 +18,6 @@ const UserSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    // verifyCode: {
-    //   type: String,
-    //   default: null,
-    // },
-    // validityOfCode: {
-    //   type: Date,
-    //   default: null,
-    // },
     isVerified: {
       type: Boolean,
       default: false,

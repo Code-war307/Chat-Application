@@ -5,14 +5,14 @@ import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import Request from "@/components/list/Request";
 import { useRequestStore } from "@/store/useRequestStore";
-import { useSession } from "next-auth/react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const InboxPage = () => {
-  const { data: session } = useSession();
-    const jwtToken = session?.jwtToken;
   const { isRequestsLoading, requests, getFriendRequests } = useRequestStore();
+  const { jwtToken } = useAuthStore();
+  
   useEffect(() => {
-    if(jwtToken){
+    if (jwtToken) {
       getFriendRequests(jwtToken);
     }
   }, [getFriendRequests, jwtToken]);
@@ -24,12 +24,7 @@ const InboxPage = () => {
           <Loader className="animate-spin h-8 w-8 text-white" />
         ) : requests.length > 0 ? (
           requests.map((req) => {
-            return (
-              <Request
-                key={req.receiverId}
-                senderInfo={req.senderId}
-              />
-            );
+            return <Request key={req.receiverId} senderInfo={req.senderId} />;
           })
         ) : (
           <p className="w-full h-full flex items-center justify-center text-white">

@@ -16,25 +16,28 @@ const Message = ({
   senderImg,
   senderName,
   media = [],
+  isSending,
 }) => {
   const messageEndRef = useRef(null);
 
-  const imagesAndVideos = media.filter(
-    (file) => file.resourceType === "image" || file.resourceType === "video"
-  );
+  const imagesAndVideos = media.filter((file) => {
+    const img = file.resourceType === "image" || file.type?.startsWith("image");
+    const video = file.resourceType === "video" || file.type?.startsWith("video");
+    return img || video;
+  });
 
-  const documents = media.filter(
-    (file) =>
-      file.resourceType !== "image" &&
-      file.resourceType !== "video" &&
-      !isAudioFile(file.originalName)
-  );
+  const documents = media.filter((file) => {
+    const img = file.resourceType === "image" || file.type?.startsWith("image");
+    const video = file.resourceType === "video" || file.type?.startsWith("video");
+    return !img && !video && !isAudioFile(file.originalName || file?.name);
+  });
 
-  const audioFile = media.filter(
-    (file) => file.resourceType === "raw" && isAudioFile(file.url)
-  );
+  const audioFile = media.filter((file) => {
+    const audio = file.resourceType === "raw" || file.type?.startsWith("audio");
+    return audio && isAudioFile(file.url || file?.name);
+  });
 
-  const hasText = content && content.trim().length > 0;
+  const hasText = content;
   const isMultipleMedia = imagesAndVideos.length > 1;
 
   useEffect(() => {
@@ -84,13 +87,14 @@ const Message = ({
               timestamp={timestamp}
               media={media}
               fromCurrentUser={fromCurrentUser}
+              isSending={isSending}
             />
           )}
 
           {/* work when there is document available */}
           {documents.length > 0 &&
             documents.map((file, i) => {
-              return <Document key={i} file={file} timestamp={timestamp} />;
+              return <Document key={i} file={file} timestamp={timestamp} isSending={isSending}/>;
             })}
 
           {/* work when there is audio file available */}
@@ -102,6 +106,7 @@ const Message = ({
                   file={file}
                   timestamp={timestamp}
                   fromCurrentUser={fromCurrentUser}
+                  isSending={isSending}
                 />
               );
             })}
@@ -111,6 +116,7 @@ const Message = ({
               fromCurrentUser={fromCurrentUser}
               content={content}
               timestamp={timestamp}
+              isSending={isSending}
             />
           )}
         </div>

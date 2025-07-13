@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Tooltip,
-  TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useConversation } from "@/hooks/useConversation";
@@ -21,12 +20,12 @@ const MobileNav = () => {
   return (
     <Card
       className={
-        "fixed bottom-2 w-[calc(100%-20px)] flex items-center h-13 p-2 bg-thirdColor border-none lg:hidden"
+        "fixed bottom-2 w-[calc(100%-20px)] flex items-center h-13 p-2 bg-thirdColor border-none lg:hidden z-100"
       }
     >
       <nav className="w-full">
         <ul className="flex justify-evenly items-center">
-          {paths.slice(0,3).map((path, id) => {
+          {paths.slice(0, 4).map((path, id) => {
             return (
               <li key={id} className="relative">
                 <Link href={path.href} aria-label={path.name}>
@@ -41,7 +40,6 @@ const MobileNav = () => {
                         {path.icon}
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>{path.name}</TooltipContent>
                   </Tooltip>
                 </Link>
               </li>

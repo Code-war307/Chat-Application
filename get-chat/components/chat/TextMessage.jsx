@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
+import { Loader } from "lucide-react";
 
-const TextMessage = ({fromCurrentUser, content, timestamp}) => {
+const TextMessage = ({fromCurrentUser, content, timestamp, isSending}) => {
   return (
     <div
       className={cn(
@@ -11,7 +12,7 @@ const TextMessage = ({fromCurrentUser, content, timestamp}) => {
       )}
     >
       <p className="whitespace-pre-wrap text-sm">{content}</p>
-      <p className={`text-[0.6rem] flex mt-2 font-semibold ${fromCurrentUser ? "justify-end" : "justify-start"}`}>{timestamp}</p>
+      <p className={`text-[0.6rem] flex items-center mt-2 font-semibold gap-2 ${fromCurrentUser ? "justify-end" : "justify-start"}`}>{timestamp}{!isSending && <span className=""><Loader className="w-3 animate-spin"/></span>}</p>
     </div>
   );
 };

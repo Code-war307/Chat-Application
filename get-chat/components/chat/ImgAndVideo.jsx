@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useChatStore } from "@/store/useChatStore";
+import { Loader } from "lucide-react";
 
 const ROTATION_CACHE = new Map();
 const ImgAndVideo = ({
@@ -11,9 +12,10 @@ const ImgAndVideo = ({
   timestamp,
   media,
   fromCurrentUser,
+  isSending
 }) => {
   const router = useRouter();
-  const {setPreviewMedias} = useChatStore()
+  const { setPreviewMedias } = useChatStore();
 
   const rotations = useMemo(() => {
     if (!isMultipleMedia) return [];
@@ -25,17 +27,18 @@ const ImgAndVideo = ({
     return newRotations;
   }, [imagesAndVideos, isMultipleMedia]);
 
-  const previewMedias = async() => {
-    await setPreviewMedias(media)
-    router.push("/media-preview")
-  }
+  const previewMedias = () => {
+    setPreviewMedias(imagesAndVideos);
+    router.push("/media-preview");
+  };
 
   return (
     <div
-      className={cn("cursor-pointer",
+      className={cn(
+        "cursor-pointer",
         isMultipleMedia
-          ? "relative w-[240px] h-[180px] mb-3"
-          : "relative w-[220px] h-[160px] mb-3 rounded-md overflow-hidden"
+          ? "relative w-[13rem] h-[10rem] mb-3"
+          : "relative w-[13rem] h-[10rem] mb-3 rounded-md overflow-hidden"
       )}
       onClick={previewMedias}
     >
@@ -50,10 +53,11 @@ const ImgAndVideo = ({
           zIndex: index * 10,
         };
 
-        return file.resourceType === "image" ? (
+        const isImg = file.resourceType === "image" || file.type?.startsWith("image")
+        return isImg ? (
           <img
             key={index}
-            src={file.url}
+            src={file.url || file?.previewUrl}
             alt={`img-${index}`}
             className={baseClass}
             style={style}
@@ -61,7 +65,7 @@ const ImgAndVideo = ({
         ) : (
           <video
             key={index}
-            src={file.url}
+            src={file.url || file?.previewUrl}
             controls
             controlsList="nodownload nofullscreen noremoteplayback"
             disablePictureInPicture
@@ -73,11 +77,15 @@ const ImgAndVideo = ({
 
       {!hasText && (
         <p
-          className={`absolute bottom-1 right-2 text-[0.6rem] text-white font-semibold px-2 py-0.5 flex ${fromCurrentUser ? "justify-end" : "justify-start"}`}
+          className={`absolute bottom-1 right-2 text-[0.6rem] text-white font-semibold px-2 py-0.5 z-100 flex ${fromCurrentUser ? "justify-end" : "justify-start"}`}
         >
           {timestamp}
         </p>
       )}
+      {!isSending && <div
+        className="absolute h-full w-full flex items-center justify-center z-100">
+        <Loader className="w-7 h-7 animate-spin text-white" />
+      </div>}
     </div>
   );
 };

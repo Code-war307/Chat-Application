@@ -3,18 +3,26 @@ import { useConversation } from "@/hooks/useConversation";
 import { cn } from "@/lib/utils";
 import { Card } from "../ui/card";
 
-const ItemList = ({ children, title, action: Action }) => {
+const ItemList = ({ children, title, action: Action, search: Search }) => {
   const { isActive } = useConversation();
   return (
     <Card
-      className={cn("hidden h-full w-full bg-itemListColor border-none  lg:flex-none lg:w-80 p-2", {
-        block: !isActive,
-        "lg:block": isActive,
-      })}
+      className={cn(
+        "hidden h-full w-full bg-itemListColor border-none  lg:flex-none lg:w-80 p-2",
+        {
+          block: !isActive,
+          "lg:block": isActive,
+        }
+      )}
     >
-      <div className="mb-4 flex items-center justify-between ">
-        <h1 className="text-2xl font-semibold tracking-tight text-white">{title}</h1>
-        {Action ? Action : null}
+      <div className="relative mb-4 flex items-center justify-between ">
+        <h1 className="text-2xl font-semibold tracking-tight text-white">
+          {title}
+        </h1>
+        <div className="hfi w-fit flex justify-center gap-4">
+          {Action ? Action : null}
+          {Search ? Search : null}
+        </div>
       </div>
       <div
         className="w-full h-[calc(100%-50px)] flex flex-col items-center justify-start gap-2 p-2 overflow-y-auto
