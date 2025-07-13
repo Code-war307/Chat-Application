@@ -5,8 +5,7 @@ import { create } from "zustand";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
 
-//const BASE_URL = "http://localhost:5001";
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -25,7 +24,7 @@ export const useAuthStore = create(
           _id: userData._id,
           username: userData.username,
           profilePic: userData.profilePic,
-          bio: userData.bio,
+          email: userData.email,
         };
         set({ authUser: data });
       },
