@@ -55,7 +55,7 @@ const Request = ({ senderInfo }) => {
               <Loader2 className="h-5 w-5" />
             </>
           ) : (
-            <Check size={'icon'}/>
+            <Check size='icon'/>
           )}
         </Button>
         <Button

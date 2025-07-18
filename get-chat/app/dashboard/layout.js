@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
       setToken(session?.jwtToken);
     }
     if (status === "authenticated" && session?.user) {
-      setUser(session.user);
+      setUser(session?.user);
       connectSocket();
     }
   }, [status, session, setUser, connectSocket, setToken]);

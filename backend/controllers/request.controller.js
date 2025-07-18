@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import FriendRequest from "../models/friendRequest.model.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export const sendFriendRequest = async (req, res) => {
   try {
@@ -42,6 +43,18 @@ export const sendFriendRequest = async (req, res) => {
       receiverId,
     });
     await newFriendRequest.save();
+
+    const friendRequest = await FriendRequest.findById(newFriendRequest._id)
+      .populate("senderId", "_id username profilePic")
+      .sort({ createdAt: -1 });
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      receiverSocketId.forEach((id) => {
+        io.to(id).emit("newFriendRequest", friendRequest);
+      });
+    }
+
     return res
       .status(200)
       .json({ success: true, message: "Friend request sent successfully" });

@@ -26,13 +26,32 @@ const userSocketMap = {}; // use to store online users -> {userId: socketId}
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   if (userId) {
-    userSocketMap[userId] = socket.id; // store the userId and socketId
+    if(!userSocketMap[userId]){
+      userSocketMap[userId] = new Set();
+    }
+    userSocketMap[userId].add(socket.id); // store the userId and socketId
   }
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap)); // is used to send events to all connected clients
 
+  socket.on("typing", ({receiverId, senderId}) => {
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    console.log("typing")
+    if(receiverSocketId){
+      receiverSocketId.forEach((id) => {
+        io.to(id).emit("showTyping", senderId)
+      })
+      
+    }
+  })
+
   socket.on("disconnect", () => {
-    delete userSocketMap[userId]; // remove the userId from the map
+    if(userSocketMap[userId]){
+      userSocketMap[userId].delete(socket.id)
+      if(userSocketMap[userId].size === 0){
+        delete userSocketMap[userId]
+      }
+    } // remove the userId from the map
     io.emit("getOnlineUsers", Object.keys(userSocketMap)); // update the online users
   });
 });

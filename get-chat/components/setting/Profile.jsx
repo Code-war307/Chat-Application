@@ -20,7 +20,7 @@ const Profile = () => {
   const { authUser, setUser } = useAuthStore();
   const { update } = useSession();
   const [enableEdit, setEnableEdit] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(authUser?.profilePic);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [bio, setBio] = useState("");
@@ -33,7 +33,6 @@ const Profile = () => {
     if (authUser) {
       setUsername(authUser?.username || "");
       setBio(authUser?.bio || "");
-      setImage(authUser?.profilePic || "");
     }
   }, [authUser]);
 

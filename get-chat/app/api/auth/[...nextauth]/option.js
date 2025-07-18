@@ -53,6 +53,7 @@ export const authOptions = {
       }
 
       if (trigger === "update" && session?.updatedUser) {
+        console.log("hello fron option.js")
         const updatedData = session.updatedUser
         token._id = updatedData._id;
         token.email = updatedData.email;

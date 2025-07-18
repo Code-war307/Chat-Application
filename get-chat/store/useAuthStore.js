@@ -1,11 +1,13 @@
 import { axiosInstance } from "@/lib/axios";
-import { signIn, update} from "next-auth/react";
+import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import { io } from "socket.io-client";
 import { persist } from "zustand/middleware";
+import { useChatStore } from "./useChatStore";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+//const BASE_URL = "http://localhost:5001";
 export const useAuthStore = create(
   persist(
     (set, get) => ({
@@ -25,6 +27,7 @@ export const useAuthStore = create(
           username: userData.username,
           profilePic: userData.profilePic,
           email: userData.email,
+          bio: userData.bio,
         };
         set({ authUser: data });
       },
@@ -111,7 +114,7 @@ export const useAuthStore = create(
       },
 
       updateUser: async (formData) => {
-        const { jwtToken } = get();
+        const { jwtToken, socket } = get();
         set({ isUpdateUser: true });
         try {
           const response = await axiosInstance.post(
@@ -124,8 +127,8 @@ export const useAuthStore = create(
             }
           );
           const newUserData = response.data.updateUserProfile;
-          toast.success(response.data.message)
-          return newUserData
+          toast.success(response.data.message);
+          return newUserData;
         } catch (error) {
           console.error("Error in update controller:", error);
           toast.error(error.response?.data?.error || "Something went wrong");
@@ -141,12 +144,37 @@ export const useAuthStore = create(
           return;
         }
         const socket = io(BASE_URL, {
+          autoConnect: false,
           query: {
             userId: authUser._id,
           },
         });
         socket.connect();
+        console.log("socket is connected");
         set({ socket: socket });
+
+        socket.on("newProfileUpdate", (newUserData) => {
+          get().setUser(newUserData);
+        });
+
+        socket.on("friendProfileUpdate", (newUserData) => {
+          console.log("Friend profile updated via socket");
+          const data = {
+            _id : newUserData?._id,
+            bio: newUserData?.bio,
+            username: newUserData?.username,
+            profilePic: newUserData?.profilePic
+          }
+
+          const currFriendList = useChatStore.getState().friends || [];
+          const updatedList = currFriendList.map(friend => 
+            friend._id === data._id ? {...friend , ...data} : friend
+          )
+
+          useChatStore.setState({friends: updatedList})
+          const setSelectedFriend = useChatStore.getState.setSelectedFriend
+          setSelectedFriend(data)
+        })
 
         socket.on("getOnlineUsers", (userIds) => {
           set({ onlineFriends: userIds });

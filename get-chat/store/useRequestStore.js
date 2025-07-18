@@ -14,7 +14,7 @@ export const useRequestStore = create((set, get) => ({
     try {
       const response = await axiosInstance.post(
         `/request/send-friend-request/`,
-        {email},
+        { email },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -30,6 +30,11 @@ export const useRequestStore = create((set, get) => ({
     } finally {
       set({ IsRequestSubmiitting: false });
     }
+  },
+
+  pushNewRequest: (request) => {
+    set((state) => ({ requests: [request, ...state.requests] }));
+    toast.success(`${request.senderId?.username} set you a friend request`);
   },
 
   getFriendRequests: async (jwtToken) => {
@@ -51,12 +56,13 @@ export const useRequestStore = create((set, get) => ({
   },
 
   acceptFriendRequest: async (jwtToken, senderId) => {
-    const {requests} = get()
+    const { requests } = get();
     set({ isAcceptingRequest: true });
     try {
       const response = await axiosInstance.post(
         "/request/accept-friend-request",
-        {senderId},{
+        { senderId },
+        {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -64,10 +70,10 @@ export const useRequestStore = create((set, get) => ({
       );
       toast.success(response.data.message);
       const updatedRequests = requests.filter(
-      (req) => req.senderId._id !== senderId
-    );
+        (req) => req.senderId._id !== senderId
+      );
 
-    set({ requests: updatedRequests });
+      set({ requests: updatedRequests });
     } catch (error) {
       console.error("Something went wrong ", error);
       const message = error?.response?.data?.message || "Something went wrong";
@@ -79,13 +85,23 @@ export const useRequestStore = create((set, get) => ({
 
   rejectFriendRequest: async (jwtToken, senderId) => {
     set({ isRejectingRequest: true });
+    const { requests } = get();
     try {
-      const response = await axiosInstance.post("/request/reject-friend-request",{senderId},{
-        headers: {
+      const response = await axiosInstance.post(
+        "/request/reject-friend-request",
+        { senderId },
+        {
+          headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
-      });
+        }
+      );
       toast.success(response.data.message);
+      const updatedRequests = requests.filter(
+        (req) => req.senderId._id !== senderId
+      );
+
+      set({ requests: updatedRequests });
     } catch (error) {
       console.error(error);
       const message = error?.response?.data?.message || "Something went wrong";

@@ -1,4 +1,5 @@
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import fs from "fs";
@@ -160,6 +161,23 @@ export const updateProfile = async (req, res) => {
       new: true,
       select: "_id username profilePic bio email isVerified",
     });
+
+    const isUserSocketIdExist = getReceiverSocketId(userId)
+    if(isUserSocketIdExist){
+      isUserSocketIdExist.forEach((id) => io.to(id).emit("newProfileUpdate", updateUserProfile))
+    }
+
+
+    if(user?.friends?.length){
+      for(const friendId of user?.friends){
+        const friendSocketId = getReceiverSocketId(friendId.toString());
+        if(friendSocketId){
+          friendSocketId.forEach((id) => {
+            io.to(id).emit("friendProfileUpdate", updateUserProfile)
+          })
+        }
+      }
+    }
 
     res.status(200).json({
       success: true,

@@ -3,12 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import { useChatStore } from "@/store/useChatStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { prefetchDNS } from "react-dom";
 
 const SidebarUser = ({ userInfo }) => {
   const { selectedFriend, setSelectedFriend } = useChatStore();
   const { onlineFriends } = useAuthStore();
   return (
-    <Link href={`/dashboard/conversation/${userInfo?._id}`} className="w-full">
+    <Link href={`/dashboard/conversation/${userInfo?._id}`} prefetch={false} className="w-full">
       <Card
         onClick={() => setSelectedFriend(userInfo)}
         className={`w-full p-2 flex flex-row items-center gap-2 border-none bg-sidebarUserBG shadow-md  hover:bg-sidebarUserHover  rounded-lg ${selectedFriend?._id === userInfo?._id ? "bg-sidebarUserHover" : ""}`}

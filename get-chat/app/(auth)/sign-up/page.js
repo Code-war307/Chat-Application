@@ -20,6 +20,7 @@ import { GiWorld } from "react-icons/gi";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
+import Link from "next/link";
 
 const SignupPage = () => {
   const [username, setUsername] = useState("");
@@ -203,9 +204,7 @@ const SignupPage = () => {
                 onClick={() => router.push("/sign-in")}
               >
                 Already have an account?{" "}
-                <span className="text-secondColor font-bold hover:underline cursor-pointer">
-                  Log in
-                </span>
+                <Link href={'/sign-in'} prefetch={true} className="text-secondColor font-bold hover:underline cursor-pointer">Login</Link>
               </p>
             </form>
           </Form>

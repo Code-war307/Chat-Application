@@ -21,7 +21,10 @@ export const useChatStore = create(
       previewMedia: [],
       tempId: null,
 
-      setSelectedFriend: (selectedFriend) => set({ selectedFriend }),
+      setSelectedFriend: (selectedFriend) => {
+        console.log("socket io click")
+        set({ selectedFriend });
+      },
 
       getUserFriends: async (jwtToken) => {
         try {

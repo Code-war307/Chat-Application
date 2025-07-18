@@ -21,9 +21,10 @@ import { useAuthStore } from "@/store/useAuthStore";
 const ChatInput = ({ conversationId }) => {
   const fileInputRef = useRef(null);
   const inputRef = useRef(null);
+  const typingTimeout = useRef(null)
   const { sendMessages, isMessageSending, addMediaFiles, mediaFiles } =
     useChatStore();
-  const { authUser, jwtToken } = useAuthStore();
+  const { authUser, jwtToken, socket } = useAuthStore();
 
   const form = useForm({
     resolver: zodResolver(chatMessageSchema),
@@ -58,7 +59,12 @@ const ChatInput = ({ conversationId }) => {
     formData.append("text", data.content.trim());
     formData.append("files", null);
 
-    const dummyMessage = dummyMsg(hasText, mediaFiles, authUser, conversationId);
+    const dummyMessage = dummyMsg(
+      hasText,
+      mediaFiles,
+      authUser,
+      conversationId
+    );
 
     try {
       await sendMessages(jwtToken, conversationId, formData, dummyMessage);
@@ -66,6 +72,17 @@ const ChatInput = ({ conversationId }) => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
+  };
+
+  const emitTypeIndicator = () => {
+    if (!socket) return;
+    clearTimeout(typingTimeout.current);
+    typingTimeout.current = setTimeout(() => {
+      socket.emit("typing", {
+        receiverId: conversationId,
+        senderId: authUser?._id,
+      });
+    }, 100);
   };
 
   return (
@@ -110,6 +127,10 @@ const ChatInput = ({ conversationId }) => {
                         e.preventDefault();
                         await form.handleSubmit(onSubmit)();
                       }
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      emitTypeIndicator();
                     }}
                   />
                 </FormControl>

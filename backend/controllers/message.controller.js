@@ -134,7 +134,9 @@ export const sendMessage = async (req, res) => {
     // Emit the new message to the receiver's socket
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      receiverSocketId.forEach((id) => {
+        io.to(id).emit("newMessage", newMessage);
+      })
     }
 
     return res.status(201).json(newMessage);

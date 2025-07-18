@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "@/schemas/loginSchema";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -19,9 +18,11 @@ import { GiWorld } from "react-icons/gi";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import { useAuthStore } from "@/store/useAuthStore";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
-  const router = useRouter();
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false);
   const {isLoggingIn, login} = useAuthStore()
 
@@ -142,12 +143,7 @@ const LoginPage = () => {
 
               <p className="text-sm text-center mt-4">
                 Don’t have an account?{" "}
-                <span
-                  onClick={() => router.push("/sign-up")}
-                  className="text-secondColor font-bold hover:underline cursor-pointer"
-                >
-                  Sign up
-                </span>
+               <Link href={'/sign-up'} prefetch={true} className="text-secondColor font-bold hover:underline cursor-pointer">Sign up</Link>
               </p>
             </form>
           </Form>

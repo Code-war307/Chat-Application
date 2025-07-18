@@ -8,14 +8,27 @@ import { useRequestStore } from "@/store/useRequestStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const InboxPage = () => {
-  const { isRequestsLoading, requests, getFriendRequests } = useRequestStore();
-  const { jwtToken } = useAuthStore();
-  
+  const { isRequestsLoading, requests, getFriendRequests, pushNewRequest } =
+    useRequestStore();
+  const { jwtToken, socket } = useAuthStore();
+
   useEffect(() => {
     if (jwtToken) {
       getFriendRequests(jwtToken);
     }
   }, [getFriendRequests, jwtToken]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNewRequest = (friendRequest) => {
+      pushNewRequest(friendRequest);
+    }
+
+    socket.on("newFriendRequest", handleNewRequest);
+
+    return () => socket.off("newFriendRequest", handleNewRequest);
+  }, [socket, pushNewRequest]);
 
   return (
     <>
