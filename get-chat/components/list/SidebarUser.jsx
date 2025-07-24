@@ -27,7 +27,7 @@ const SidebarUser = ({ userInfo }) => {
     return () => socket.off("showTyping", handleTyping);
   }, [socket]);
 
-  const showTypingBubble = typingUserId && selectedFriend?._id === typingUserId;
+  const showTypingBubble = typingUserId && userInfo?._id === typingUserId;
 
   return (
     <Link
