@@ -13,12 +13,15 @@ const TypingIndicator = () => {
             {selectedFriend?.username?.charAt(0).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-        <div class="flex space-x-2 justify-center items-center max-w-full bg-thirdColor px-2 py-1 rounded-lg rounded-bl-none">
-          <div class="h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-          <div class="h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.10s]"></div>
-          <div class="h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.17s]"></div>
-          <div class="h-2 w-2 bg-white rounded-full animate-bounce [animation-delay:-0.24s]"></div>
-          <div class="h-2 w-2 bg-white rounded-full animate-bounce"></div>
+        <div className="flex  max-w-full bg-thirdColor px-2 py-1 rounded-lg rounded-bl-none gap-1 ">
+          <span className="text-white text-[0.8rem] font-light">
+            Typing
+          </span>
+          <div className="flex items-center gap-1">
+            <div className="h-[0.15rem] w-[0.15rem] bg-white rounded-full animate-bounce [animation-delay:-0.7s]"></div>
+            <div className="h-[0.15rem] w-[0.15rem] bg-white rounded-full animate-bounce [animation-delay:-0.16s]"></div>
+            <div className="h-[0.15rem] w-[0.15rem] bg-white rounded-full animate-bounce [animation-delay:-0.25s]"></div>
+          </div>
         </div>
       </div>
     </div>

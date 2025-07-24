@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import FriendRequest from "../models/friendRequest.model.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
+import redis from "../lib/redis.js";
 
 export const sendFriendRequest = async (req, res) => {
   try {
@@ -123,6 +124,42 @@ export const acceptFriendRequest = async (req, res) => {
     // update friend request status
     findFriendRequest.status = "accepted";
     await findFriendRequest.save();
+
+    const keyA = `user:${senderId}`
+    const keyB = `user:${receiverId}`
+    try {
+      await redis.del(keyA, keyB)
+    } catch (error) {
+      console.error("Redis error occrur",error.message)
+    }
+
+    const senderData = {
+      _id : sender?._id,
+      profilePic: sender?.profilePic,
+      bio: sender?.bio,
+      username: sender?.username
+    }
+
+    const receiverData = {
+      _id : receiver?._id,
+      profilePic: receiver?.profilePic,
+      bio: receiver?.bio,
+      username: receiver?.username
+    }
+
+    const senderSocketId = getReceiverSocketId(senderId);
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if(senderSocketId){
+      senderSocketId.forEach((id) => {
+        io.to(id).emit("newFriendAddInList", receiverData)
+      })
+    }
+
+    if(receiverSocketId){
+      receiverSocketId.forEach((id) => {
+        io.to(id).emit("newFriendAddInList", senderData)
+      })
+    }
 
     return res.status(200).json({ success: true, message: "Request accepted" });
   } catch (error) {

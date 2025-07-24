@@ -22,7 +22,6 @@ export const useChatStore = create(
       tempId: null,
 
       setSelectedFriend: (selectedFriend) => {
-        console.log("socket io click")
         set({ selectedFriend });
       },
 
@@ -42,6 +41,10 @@ export const useChatStore = create(
         } finally {
           set({ isFriendsLoading: false });
         }
+      },
+
+      pushNewFriend: (newFriend) => {
+        set((state) => ({ friends: [newFriend, ...state.friends] }));
       },
 
       setFilteredFriend: (friend) => set({ filteredFriend: friend }),
@@ -182,6 +185,7 @@ export const useChatStore = create(
       partialize: (state) => ({
         selectedFriend: state.selectedFriend,
         previewMedia: state.previewMedia,
+        filteredFriend: state.filteredFriend,
       }),
     }
   )

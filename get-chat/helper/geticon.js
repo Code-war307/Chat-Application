@@ -36,6 +36,16 @@ export const getFilePreviewInfo = (url) => {
     case "ogg":
       icon = "/icons/audio.png";
       break;
+    case "webp":
+    case "jpg":
+    case "jpeg":
+    case "png":
+    case "heic":
+    case "heif":
+    case "tiff":
+    case "ico":
+      icon = "/icons/photo.png"
+      break
     default:
       icon = "/icons/file.png";
   }

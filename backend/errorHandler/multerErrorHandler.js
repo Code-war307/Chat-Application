@@ -1,3 +1,4 @@
+import multer from "multer";
 export function multerErrorHandler(err, req, res, next) {
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
@@ -5,7 +6,7 @@ export function multerErrorHandler(err, req, res, next) {
     }
 
     if (err.code === "LIMIT_FILE_COUNT") {
-      return res.status(413).json({ error: "Too many files uploaded." });
+      return res.status(413).json({ error: "Too many files uploaded. Only 5 files are allowed at a time." });
     }
 
     return res.status(400).json({ error: err.message });

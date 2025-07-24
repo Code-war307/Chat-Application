@@ -6,7 +6,7 @@ const SidebarWrapper = ({children}) => {
     <div className='h-full w-full p-2 flex flex-col bg-thirdColor lg:flex-row gap-2'>
       <MobileNav/>
       <DesktopNav/>
-        <main className='h-[calc(100%-80px)] flex lg:h-full w-full gap-2'>
+        <main className='h-[calc(100%-55px)] flex lg:h-full w-full gap-2'>
             {children}
         </main>
     </div>

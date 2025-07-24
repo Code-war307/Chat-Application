@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Inbox, MessageCircle, Settings, Users } from "lucide-react";
+import { File, Inbox, MessageCircle, Settings, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
@@ -27,6 +27,12 @@ export const useNavigation = () => {
         href: "/dashboard/inbox",
         icon: <Inbox />,
         active: pathname === "/dashboard/inbox",
+      },
+      {
+        name: "File Converter",
+        href: "/file-convertor",
+        icon: <File />,
+        active: pathname === "/file-convertor",
       },
       {
         name: "setting",

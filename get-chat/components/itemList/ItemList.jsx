@@ -3,7 +3,7 @@ import { useConversation } from "@/hooks/useConversation";
 import { cn } from "@/lib/utils";
 import { Card } from "../ui/card";
 
-const ItemList = ({ children, title, action: Action, search: Search }) => {
+const ItemList = ({ children, title, action: Action, search: Search, extFormator: ExtFormator }) => {
   const { isActive } = useConversation();
   return (
     <Card
@@ -19,7 +19,8 @@ const ItemList = ({ children, title, action: Action, search: Search }) => {
         <h1 className="text-2xl font-semibold tracking-tight text-white">
           {title}
         </h1>
-        <div className="hfi w-fit flex justify-center gap-4">
+        <div className="flex justify-center gap-4">
+          {ExtFormator ? ExtFormator : null}
           {Action ? Action : null}
           {Search ? Search : null}
         </div>

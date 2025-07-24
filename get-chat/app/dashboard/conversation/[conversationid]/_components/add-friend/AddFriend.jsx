@@ -48,7 +48,7 @@ const AddFriend = () => {
       <Tooltip>
         <TooltipTrigger>
           <DialogTrigger asChild>
-              <UserPlus className="text-white w-4" />
+              <UserPlus className="text-white w-4 cursor-pointer" />
             </DialogTrigger>
         </TooltipTrigger>
       </Tooltip>
